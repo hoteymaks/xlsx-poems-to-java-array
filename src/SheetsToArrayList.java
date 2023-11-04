@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class SheetsToArrayList {
-    static ArrayList<Content> poems;
+    private static ArrayList<Content> poems;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         poems = getPoems("sample-poems.xlsx");
 
         // Example print of ArrayList contents
@@ -35,13 +35,20 @@ public class SheetsToArrayList {
         }
     }
 
-    public static ArrayList<Content> getPoems(String filename) throws IOException {
+    public static ArrayList<Content> getPoems(String filename) {
         poems = new ArrayList<>();
+        FileInputStream myInput;
         // Use this for Android App instead of FileInputStream:  InputStream myInput;
         //                                                       AssetManager assetManager = context.getAssets();
         //                                                       myInput = assetManager.open(filename);
-        FileInputStream myInput = new FileInputStream(filename);  // Make sure you entered poems Word file name correctly
-        XSSFWorkbook myWorkBook = new XSSFWorkbook(myInput);
+        XSSFWorkbook myWorkBook;
+        try {
+            myInput = new FileInputStream(filename);  // Make sure you entered poems Excel file name correctly
+            myWorkBook = new XSSFWorkbook(myInput);
+        } catch (Exception e) {
+            System.out.println("Make sure you entered file name correctly.");
+            return poems;
+        }
         XSSFSheet mySheet = myWorkBook.getSheetAt(0);
         Iterator<Row> rowIter = mySheet.rowIterator();
         int rowno = 0;
